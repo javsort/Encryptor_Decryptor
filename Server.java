@@ -98,5 +98,7 @@ public class Server extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         Server server = new Server(5000);
+
+        System.out.println("Server is running");
     }
 }
