@@ -1,3 +1,4 @@
+import javax.crypto.SecretKey;
 import javax.swing.*;
 
 import java.awt.*;
@@ -12,7 +13,9 @@ public class Server extends JFrame implements ActionListener {
     private ServerSocket server = null;
     private Socket socket = null;
     private DataInputStream in = null;
-    private DataOutputStream out = null;
+    private ObjectOutputStream out = null;
+
+    private Functions functions = new Functions();
 
     private int port;
 
@@ -84,21 +87,34 @@ public class Server extends JFrame implements ActionListener {
 
             socket = server.accept();
 
-            System.out.println("Client accepted");
-            text.setText("Client accepted");
-
-            out = new DataOutputStream(socket.getOutputStream());
-
-            out.writeUTF("Hola hijo de tu puta madre como estas esta puta mañana imbecil");
+            if(socket != null){
+                sendMessage();
+            }
 
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
+    public void sendMessage() throws Exception {
+        System.out.println("Client accepted");
+        text.setText("Client accepted");
+
+        try {
+            out = new ObjectOutputStream(socket.getOutputStream());
+
+            SecretKey instanceKey = functions.generateKey();
+
+            Message toSend = new Message(instanceKey, functions.encryptData("Hello Client", instanceKey));
+            out.writeObject(toSend);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         Server server = new Server(5000);
-
         System.out.println("Server is running");
     }
 }

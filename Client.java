@@ -1,6 +1,9 @@
 import java.io.DataInputStream;
 import java.net.Socket;
 
+import java.util.Random;
+import java.util.function.Function;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -11,10 +14,12 @@ import java.net.*;
 public class Client extends JFrame implements ActionListener {
     // Network data
     private Socket socket = null;
-    private DataInputStream in = null;
+    private ObjectInputStream in = null;
 
     private String address;
     private int port;
+
+    private Functions functions = new Functions();
 
     // GUI info
     JTextPane text;
@@ -24,6 +29,8 @@ public class Client extends JFrame implements ActionListener {
     JPanel coverButton;
 
     JButton clientConnect;
+
+    Random key;
 
 
     public Client(String addr, int port){
@@ -81,13 +88,14 @@ public class Client extends JFrame implements ActionListener {
         try {
             socket = new Socket(address, port);
 
-            in = new DataInputStream(socket.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             
             System.out.println("Connected");
             clientConnect.setText("Connected!");
 
-            String message = in.readUTF();
-            text.setText("Your Message!: " + message);
+            Message message = (Message) in.readObject();
+
+            text.setText("Your Message!: " + functions.decryptData(message));
 
         } catch (Exception exc) {
             System.out.println("Connection failed bruv: " + exc);
