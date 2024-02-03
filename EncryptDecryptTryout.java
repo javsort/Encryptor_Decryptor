@@ -3,6 +3,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 
+// This version of the Encryptor_Decryptor is a simple tryout of the encryption and decryption process within the same class file
+// The main method is used to test the encryption and decryption of a message
+
 public class EncryptDecryptTryout {
     
     public static void main(String[] args) throws Exception {
