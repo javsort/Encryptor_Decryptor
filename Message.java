@@ -18,6 +18,4 @@ public class Message implements Serializable {
     public byte[] getMessage(){
         return this.message;
     }
-
-    
 }

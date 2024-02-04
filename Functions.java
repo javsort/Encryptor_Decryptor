@@ -24,5 +24,4 @@ public class Functions {
 
         return new String(decryptedData);
     }
-
 }
