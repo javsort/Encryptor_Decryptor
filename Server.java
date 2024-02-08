@@ -105,7 +105,7 @@ public class Server extends JFrame implements ActionListener {
 
             SecretKey instanceKey = functions.generateKey();
 
-            Message toSend = new Message(instanceKey, functions.encryptData("Hello Client", instanceKey));
+            Message toSend = new Message(instanceKey, functions.encryptData("Esto es en branch main", instanceKey));
             out.writeObject(toSend);
 
         } catch (IOException e) {
