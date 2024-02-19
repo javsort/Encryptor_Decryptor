@@ -4,18 +4,19 @@ import Constructors.Functions;
 import Constructors.Message;
 
 import javax.crypto.SecretKey;
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 
-public class Server extends JFrame implements ActionListener {
+public class Server {
 
-    private ServerSocket server = null;
+    private ServerSocket serverSocket;
+    private ExecutorService executorService;
+    //private List<ClientHandler> clients;
+
     private Socket socket = null;
     private DataInputStream in = null;
     private ObjectOutputStream out = null;
@@ -24,86 +25,40 @@ public class Server extends JFrame implements ActionListener {
 
     private int port;
 
-    // GUI info
-    JTextPane text;
-    JPanel buttonPanel;
-
-    JPanel coverText;
-    JPanel coverButton;
-
-    JButton connect;
-
     public Server(int port){
+        try {
+            serverSocket = new ServerSocket(port);
+            executorService = Executors.newFixedThreadPool(10);     // # of threads for clients ig
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
         // Connection Data
-        this.port = port;
-
-        // GUI
-        setTitle("Server");
-        setSize(400, 200);
-        setResizable(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        Container contentPane;
-        contentPane = getContentPane();
-        contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
-
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-
-        connect = new JButton("Turn On");
-
-        buttonPanel.add(connect);
-        connect.addActionListener(this);
-
-        text = new JTextPane();
-        text.setText("Server.Server About to Connect!");
-
-
-        // Covers
-        coverButton = new JPanel();
-        coverButton.setLayout(new FlowLayout());
-        coverButton.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-        coverButton.setBackground(Color.LIGHT_GRAY);
-        
-        coverText = new JPanel();
-        coverText.setLayout(new FlowLayout());
-        coverText.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-        coverText.setBackground(Color.LIGHT_GRAY);
-
-
-        coverText.add(text);
-        coverButton.add(buttonPanel);
-
-        contentPane.add(coverText, BorderLayout.CENTER);
-        contentPane.add(coverButton, BorderLayout.SOUTH);
-
-        setVisible(true);
+        //this.port = port;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent action) {
+    public void establishConnection(){
+        System.out.println("Server started");
+
         try {
-            connect.setText("Connected!");
-            server = new ServerSocket(port);
-            System.out.println("Server.Server started");
-
             System.out.println("Waiting for a client ...");
+            Socket socket = serverSocket.accept();
+            System.out.println("Client accepted");
 
-            socket = server.accept();
+            ClientHandler clientHandler = new ClientHandler(socket);
+            executorService.execute(clientHandler);
 
-            if(socket != null){
-                sendMessage();
-            }
+        } catch (IOException e){
+            e.printStackTrace();
 
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 
+
+
+    // CHECKKKKK
     public void sendMessage() throws Exception {
-        System.out.println("Client.Client accepted");
-        text.setText("Client.Client accepted");
+        System.out.println("Client accepted");
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -116,10 +71,5 @@ public class Server extends JFrame implements ActionListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        Server server = new Server(5000);
-        System.out.println("Server.Server is running");
     }
 }

@@ -97,7 +97,7 @@ public class Client extends JFrame implements ActionListener {
 
             Message message = (Message) in.readObject();
 
-            text.setText("Your Constructors.Message!: " + functions.decryptData(message));
+            text.setText("Your Message!: " + functions.decryptData(message));
 
         } catch (Exception exc) {
             System.out.println("Connection failed bruv: " + exc);
@@ -108,6 +108,6 @@ public class Client extends JFrame implements ActionListener {
     public static void main(String[] args) {
         Client client = new Client("127.0.0.1", 5000);
 
-        System.out.println("Client.Client Connected");
+        System.out.println("Client Connected");
     }
 }
