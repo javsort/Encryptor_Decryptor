@@ -1,15 +1,17 @@
-import java.io.DataInputStream;
+package Client;
+
+import Constructors.Functions;
+import Constructors.Message;
+
 import java.net.Socket;
 
 import java.util.Random;
-import java.util.function.Function;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.net.*;
 
 public class Client extends JFrame implements ActionListener {
     // Network data
@@ -95,7 +97,7 @@ public class Client extends JFrame implements ActionListener {
 
             Message message = (Message) in.readObject();
 
-            text.setText("Your Message!: " + functions.decryptData(message));
+            text.setText("Your Constructors.Message!: " + functions.decryptData(message));
 
         } catch (Exception exc) {
             System.out.println("Connection failed bruv: " + exc);
@@ -106,6 +108,6 @@ public class Client extends JFrame implements ActionListener {
     public static void main(String[] args) {
         Client client = new Client("127.0.0.1", 5000);
 
-        System.out.println("Client Connected");
+        System.out.println("Client.Client Connected");
     }
 }

@@ -1,3 +1,8 @@
+package Server;
+
+import Constructors.Functions;
+import Constructors.Message;
+
 import javax.crypto.SecretKey;
 import javax.swing.*;
 
@@ -52,7 +57,7 @@ public class Server extends JFrame implements ActionListener {
         connect.addActionListener(this);
 
         text = new JTextPane();
-        text.setText("Server About to Connect!");
+        text.setText("Server.Server About to Connect!");
 
 
         // Covers
@@ -81,7 +86,7 @@ public class Server extends JFrame implements ActionListener {
         try {
             connect.setText("Connected!");
             server = new ServerSocket(port);
-            System.out.println("Server started");
+            System.out.println("Server.Server started");
 
             System.out.println("Waiting for a client ...");
 
@@ -97,8 +102,8 @@ public class Server extends JFrame implements ActionListener {
     }
 
     public void sendMessage() throws Exception {
-        System.out.println("Client accepted");
-        text.setText("Client accepted");
+        System.out.println("Client.Client accepted");
+        text.setText("Client.Client accepted");
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -115,6 +120,6 @@ public class Server extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         Server server = new Server(5000);
-        System.out.println("Server is running");
+        System.out.println("Server.Server is running");
     }
 }
