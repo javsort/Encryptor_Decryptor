@@ -1,0 +1,14 @@
+Week 18: Demonstration ideals
+- Overall presentation of the app - assumed
+
+- Encryption description - 50% done
+
+- Message Priority / Queuing display - 25%
+
+- Memory of messages display	- TBI
+
+- Displaying stress testing
+	- Max client handling	-	40%
+	- Max message input	- 	? %
+
+- Handshake (?)
