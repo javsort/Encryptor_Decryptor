@@ -7,30 +7,23 @@ import java.net.Socket;
 
 import java.util.Random;
 
+import javax.crypto.SecretKey;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class Client extends JFrame implements ActionListener {
+public class Client {
     // Network data
     private Socket socket = null;
     private ObjectInputStream in = null;
+    private ObjectOutputStream out = null;
 
     private String address;
     private int port;
 
     private Functions functions = new Functions();
-
-    // GUI info
-    JTextPane text;
-    JPanel buttonPanel;
-
-    JPanel coverText;
-    JPanel coverButton;
-
-    JButton clientConnect;
 
     Random key;
 
@@ -40,74 +33,47 @@ public class Client extends JFrame implements ActionListener {
         this.address = addr;
         this.port = port;
 
-        // GUI
-        setTitle("Client");
-        setSize(400, 200);
-        setResizable(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        Container contentPane;
-        contentPane = getContentPane();
-        contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
-
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-
-        clientConnect = new JButton("Start Connection");
-
-        buttonPanel.add(clientConnect);
-        clientConnect.addActionListener(this);
-
-        text = new JTextPane();
-        text.setText("Awaiting Data...");
-
-
-        // Covers
-        coverButton = new JPanel();
-        coverButton.setLayout(new FlowLayout());
-        coverButton.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-        coverButton.setBackground(Color.LIGHT_GRAY);
-        
-        coverText = new JPanel();
-        coverText.setLayout(new FlowLayout());
-        coverText.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-        coverText.setBackground(Color.LIGHT_GRAY);
-
-
-        coverText.add(text);
-        coverButton.add(buttonPanel);
-
-        contentPane.add(coverText, BorderLayout.CENTER);
-        contentPane.add(coverButton, BorderLayout.SOUTH);
-
-        setVisible(true);
-        
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public void connectToServer() throws Exception {
         try {
             socket = new Socket(address, port);
-
+            out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            
             System.out.println("Connected");
-            clientConnect.setText("Connected!");
-
-            Message message = (Message) in.readObject();
-
-            text.setText("Your Message!: " + functions.decryptData(message));
 
         } catch (Exception exc) {
             System.out.println("Connection failed bruv: " + exc);
         }
-
     }
 
-    public static void main(String[] args) {
-        Client client = new Client("127.0.0.1", 5000);
+    public String receiveMessage(){
+        try {
+            Message message = (Message) in.readObject();
 
-        System.out.println("Client Connected");
+            if(message != null){
+                return functions.decryptData(message);
+
+            } else {
+                throw new Exception("Message is null");
+
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void sendMessage(String message){
+        try {
+            SecretKey key = functions.generateKey();
+
+            out.writeObject(new Message(key, functions.encryptData(message, key)));
+
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Failed to send message");
+        }
     }
 }
