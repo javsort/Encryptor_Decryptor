@@ -14,6 +14,9 @@ public class ClientFrame extends JFrame implements ActionListener {
     private JPanel coverText;
     private JPanel coverButton;
 
+    private JTextField inputField;
+    private JButton sendButton;
+
     private JButton clientConnect;
 
     private Client client;
@@ -21,28 +24,37 @@ public class ClientFrame extends JFrame implements ActionListener {
     public ClientFrame(String addr, int port){
         // Client
         client = new Client(addr, port);
-
+    
         // GUI
         setTitle("Client");
         setSize(400, 200);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    
         Container contentPane;
         contentPane = getContentPane();
-        contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-
-        buttonPanel = new JPanel();
+    
+        buttonPanel = new JPanel();  // You need to initialize buttonPanel before adding components
         buttonPanel.setLayout(new FlowLayout());
-
-        clientConnect = new JButton("Start Connection");
-
+    
+        inputField = new JTextField(15); // Ensure this line is before buttonPanel.add(inputField);
+    
+        // Same for the sendButton
+        sendButton = new JButton("Send");
+        sendButton.addActionListener(this);
+    
+        buttonPanel.add(inputField);
+        buttonPanel.add(sendButton);
+    
+        clientConnect = new JButton("Start Connection"); // Initialize clientConnect as well
+    
         buttonPanel.add(clientConnect);
         clientConnect.addActionListener(this);
-
+    
         text = new JTextPane();
         text.setText("Awaiting Data...");
+    
 
 
         // Covers
@@ -86,10 +98,10 @@ public class ClientFrame extends JFrame implements ActionListener {
         }).start();
     }
 
-    @Override
+        @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getSource() == clientConnect){
+        if (e.getSource() == clientConnect) {
             try {
                 client.connectToServer();
                 clientConnect.setText("Connected!");
@@ -98,7 +110,10 @@ public class ClientFrame extends JFrame implements ActionListener {
             } catch (Exception exc) {
                 System.out.println("Connection failed bruv: " + exc);
             }
+        } else if (e.getSource() == sendButton) {
+            String message = inputField.getText();
+            client.sendMessage(message);
+            inputField.setText(""); 
         }
-
     }
 }
