@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.ServerSocket;
 
 public class ServerFrame extends JFrame implements ActionListener {
     private final Server server;
@@ -62,6 +61,7 @@ public class ServerFrame extends JFrame implements ActionListener {
 
         contentPane.add(coverText, BorderLayout.CENTER);
         contentPane.add(coverButton, BorderLayout.SOUTH);
+
 
         setVisible(true);
     }

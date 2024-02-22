@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ClientFrame extends JFrame implements ActionListener {
+public class ClientFrame extends JFrame implements ActionListener, ClientObserver {
 
     // GUI info
     private JTextPane text;
@@ -24,6 +24,7 @@ public class ClientFrame extends JFrame implements ActionListener {
     public ClientFrame(String addr, int port){
         // Client
         client = new Client(addr, port);
+        client.registerObserver(this);
     
         // GUI
         setTitle("Client");
@@ -78,34 +79,19 @@ public class ClientFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    private void startReceiving(){
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                while (true){
-                    String message = client.receiveMessage();
-
-                    if(message != null){
-                        SwingUtilities.invokeLater(new Runnable(){
-                            @Override
-                            public void run(){
-                                text.setText("Your Message!: " + message);
-                            }
-                        });
-                    }
-                }
-            }
-        }).start();
+    @Override
+    public void updateMessage(String message) {
+        text.setText(message);
     }
 
-        @Override
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == clientConnect) {
             try {
                 client.connectToServer();
                 clientConnect.setText("Connected!");
-                startReceiving();
+                client.startReceiving();
 
             } catch (Exception exc) {
                 System.out.println("Connection failed bruv: " + exc);

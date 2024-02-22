@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 import javax.crypto.SecretKey;
+import javax.swing.*;
 import java.io.*;
 
 public class Client {
@@ -23,6 +24,8 @@ public class Client {
     private Queue<String> messageQueue;
     private boolean isSendingAllowed;
 
+    private ClientObserver observer;
+
     public Client(String addr, int port) {
         this.address = addr;
         this.port = port;
@@ -33,6 +36,10 @@ public class Client {
         // this.KeyPair = generateKeyPair();
 
         new Thread(this::handleTimingsAndQueuedMessages).start();
+    }
+
+    public void registerObserver(ClientObserver observer){
+        this.observer = observer;
     }
 
     public void connectToServer() throws Exception {
@@ -63,6 +70,23 @@ public class Client {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void startReceiving(){
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                while (true){
+                    String message = receiveMessage();
+
+                    if(message != null){
+                        if(observer != null) {
+                            observer.updateMessage(message);
+                        }
+                    }
+                }
+            }
+        }).start();
     }
 
     public void sendMessage(String message) {
@@ -97,6 +121,8 @@ public class Client {
     private void sendMessageImmediately(String message) {
         try {
             SecretKey key = functions.generateKey();
+
+            // Change for server
             out.writeObject(new Message(key, functions.encryptData(message, key)));
 
         } catch (Exception e) {

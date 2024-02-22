@@ -16,11 +16,13 @@ public class ClientHandler implements Runnable {
     private ObjectOutputStream out;
     private Socket clientSocket;
     private Functions functions = new Functions();
+    private Server server;
 
 
-    public ClientHandler(Socket socket) throws IOException {
+    public ClientHandler(Socket socket, Server server) throws IOException {
         System.out.println("ClientHandler created with addr: " + socket.getInetAddress() + " & port: " + socket.getPort());
 
+        this.server = server;
         this.clientSocket = socket;
         out = new ObjectOutputStream(clientSocket.getOutputStream());
         in = new ObjectInputStream(clientSocket.getInputStream());
@@ -37,12 +39,16 @@ public class ClientHandler implements Runnable {
                 String decryptedMessage = functions.decryptData(message);
                 System.out.println("Received message: " + decryptedMessage);
 
+                // After receiving it in server, send it back out
+                server.forwardMessage(message, this);
+
+                // DIZ SUM OTHER SHIT
                 // Prepare response
                 SecretKey instanceKey = functions.generateKey();
                 Message toSend = new Message(instanceKey, functions.encryptData("Reply: " + decryptedMessage, instanceKey));
 
                 // Send response back to client
-                out.writeObject(toSend);
+                //out.writeObject(toSend);
             }
 
         } catch (Exception e) {
@@ -70,5 +76,9 @@ public class ClientHandler implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void sendMessage(Message message) throws Exception {
+        out.writeObject(message);
     }
 }
