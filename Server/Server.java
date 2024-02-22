@@ -80,23 +80,4 @@ public class Server {
             }
         }
     }
-
-
-
-    // CHECKKKKK
-    public void sendMessage() throws Exception {
-        System.out.println("Client accepted");
-
-        try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-
-            SecretKey instanceKey = functions.generateKey();
-
-            Message toSend = new Message(instanceKey, functions.encryptData("Esto es en branch main", instanceKey));
-            out.writeObject(toSend);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

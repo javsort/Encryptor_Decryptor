@@ -41,14 +41,6 @@ public class ClientHandler implements Runnable {
 
                 // After receiving it in server, send it back out
                 server.forwardMessage(message, this);
-
-                // DIZ SUM OTHER SHIT
-                // Prepare response
-                SecretKey instanceKey = functions.generateKey();
-                Message toSend = new Message(instanceKey, functions.encryptData("Reply: " + decryptedMessage, instanceKey));
-
-                // Send response back to client
-                //out.writeObject(toSend);
             }
 
         } catch (Exception e) {
