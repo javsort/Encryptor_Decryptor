@@ -30,6 +30,8 @@ public class Client {
         //initialize message queue
         this.messageQueue = new LinkedList<>();
 
+        // this.KeyPair = generateKeyPair();
+
         new Thread(this::handleTimingsAndQueuedMessages).start();
     }
 
@@ -77,7 +79,8 @@ public class Client {
             Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_WEEK);
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            isSendingAllowed = ((day >= Calendar.MONDAY && day <= Calendar.FRIDAY) && (hour >= 9 && hour < 17));
+            //isSendingAllowed = ((day >= Calendar.MONDAY && day <= Calendar.FRIDAY) && (hour >= 9 && hour < 17));
+            isSendingAllowed = true;
 
             //process the queue if sending is allowed
             if (isSendingAllowed) {

@@ -7,6 +7,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 public class Functions {
+
+    // Utilize RSA Encryption (we have 2 keys, public - used by everyone and private - only usable by the owner)
+    // CAMBIAR ESTE PEDO APENAS SE PUEDA!!!
     public SecretKey generateKey() throws Exception{
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(256);
