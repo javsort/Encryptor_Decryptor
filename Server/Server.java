@@ -43,7 +43,7 @@ public class Server {
         try {
             System.out.println("Waiting for a client ...");
             Socket socket = serverSocket.accept();
-            System.out.println("Client accepted");
+            System.out.println("Client accepted" + socket.getInetAddress() + ":" + socket.getPort());
 
             ClientHandler clientHandler = new ClientHandler(socket);
             executorService.execute(clientHandler);

@@ -20,6 +20,7 @@ public class ClientHandler implements Runnable {
 
 
     public ClientHandler(Socket socket) throws IOException {
+    System.out.println("ClientHandler created with addr: " + socket.getInetAddress() + " & port: " + socket.getPort());
         this.clientSocket = socket;
         out = new ObjectOutputStream(clientSocket.getOutputStream());
         in = new ObjectInputStream(clientSocket.getInputStream());
@@ -27,7 +28,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (!clientSocket.isClosed()) {
             try {
                 Message message = (Message) in.readObject();
                 String decryptedMessage = functions.decryptData(message);
@@ -39,6 +40,25 @@ public class ClientHandler implements Runnable {
 
             } catch (Exception e) {
                 e.printStackTrace();
+
+                try {
+                    System.out.println("Attempting to reconnect...");
+                    clientSocket = new Socket(clientSocket.getInetAddress(), clientSocket.getPort());
+                    out = new ObjectOutputStream(clientSocket.getOutputStream());
+                    in = new ObjectInputStream(clientSocket.getInputStream());
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("Reconnect failed, closing client socket...");
+
+                    try {
+                        clientSocket.close();
+                    } catch (IOException exc) {
+                        exc.printStackTrace();
+                    }
+                }
+
+                break;
             }
         }
     }
