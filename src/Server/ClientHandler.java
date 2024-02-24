@@ -1,13 +1,11 @@
 package Server;
 
-import Constructors.Functions;
-import Constructors.Message;
+import Constructors.*;
 
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import javax.crypto.SecretKey;
 
 
 public class ClientHandler implements Runnable {
@@ -31,7 +29,7 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try{
-            while(true){
+            while(server.isRunning){
                 // Create message by reading mssg
                 Message message = (Message) in.readObject();
 

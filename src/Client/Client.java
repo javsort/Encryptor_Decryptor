@@ -1,7 +1,6 @@
 package Client;
 
-import Constructors.Functions;
-import Constructors.Message;
+import Constructors.*;
 
 import java.net.Socket;
 
@@ -10,7 +9,6 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 import javax.crypto.SecretKey;
-import javax.swing.*;
 import java.io.*;
 
 public class Client {
