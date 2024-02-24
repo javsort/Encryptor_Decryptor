@@ -68,6 +68,10 @@ public class Server {
 
     }
 
+    public void removeClient(ClientHandler disconnected){
+        clients.remove(disconnected);
+    }
+
     public void stopServer(){
         isRunning = false;
         executorService.shutdown();

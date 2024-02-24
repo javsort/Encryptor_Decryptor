@@ -44,17 +44,7 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
             // Handle client disconnection
             System.out.println("Client disconnected!: " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
-
-            try {
-                System.out.println("Attempting to reconnect...");
-                clientSocket = new Socket(clientSocket.getInetAddress(), clientSocket.getPort());
-                out = new ObjectOutputStream(clientSocket.getOutputStream());
-                in = new ObjectInputStream(clientSocket.getInputStream());
-                System.out.println("Reconnection Successful!");
-
-            } catch (IOException ex){
-                System.out.println("Reconnect failed, closing client socket... mssg: " + ex.getMessage());
-            }
+            server.removeClient(this);
 
         } finally {
             try {
