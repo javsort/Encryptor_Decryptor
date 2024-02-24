@@ -1,7 +1,4 @@
-package Controller;
-
-import Client.ClientFrame;
-import Server.ServerFrame;
+import Client.*;
 
 public class ClientController {
     public static void main(String[] args) {

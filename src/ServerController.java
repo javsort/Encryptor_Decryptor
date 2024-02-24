@@ -1,5 +1,3 @@
-package Controller;
-
 import Server.ServerFrame;
 
 import javax.swing.*;
@@ -7,7 +5,8 @@ import javax.swing.*;
 public class ServerController {
     public static void main(String[] args) {
         System.out.println("Initializing Server");
-        SwingUtilities.invokeLater((new Runnable() {
+        ServerFrame server = new ServerFrame(5000);
+        /*SwingUtilities.invokeLater((new Runnable() {
             @Override
             public void run() {
                 try {
@@ -16,6 +15,6 @@ public class ServerController {
                     e.printStackTrace();
                 }
             }
-        }));
+        }));*/
     }
 }

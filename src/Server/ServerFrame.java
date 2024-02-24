@@ -18,6 +18,7 @@ public class ServerFrame extends JFrame implements ActionListener {
     JPanel coverButton;
 
     JButton connect;
+    JButton shutoff;
 
     public ServerFrame(int port){
         server = new Server(port);
@@ -30,15 +31,17 @@ public class ServerFrame extends JFrame implements ActionListener {
 
         Container contentPane;
         contentPane = getContentPane();
-        contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
         connect = new JButton("Turn On");
+        shutoff = new JButton("Turn Off");
 
         buttonPanel.add(connect);
+        buttonPanel.add(shutoff);
+        shutoff.addActionListener(this);
         connect.addActionListener(this);
 
         text = new JTextPane();
@@ -68,12 +71,38 @@ public class ServerFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent action) {
-        try {
-            server.establishConnection();
-            connect.setText("Connected!");
+        if(action.getSource() == shutoff){
+            if(!server.isRunning){
+                text.setText("Server is already off");
+                return;
+            } else {
+                server.stopServer();
+                text.setText("Server Shut Down");
+            }
+        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(action.getSource() == connect){
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    server.establishConnection();
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    connect.setText("Connected!");
+                }
+            };
+            worker.execute();
+
+            /*try {
+                server.establishConnection();
+                connect.setText("Connected!");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
         }
     }
 
