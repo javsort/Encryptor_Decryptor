@@ -25,7 +25,7 @@ public class ServerFrame extends JFrame implements ActionListener {
 
         // GUI
         setTitle("Server");
-        setSize(400, 200);
+        setSize(500, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

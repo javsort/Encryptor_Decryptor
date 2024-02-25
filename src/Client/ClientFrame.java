@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ClientFrame extends JFrame implements ActionListener, ClientObserver {
 
@@ -16,8 +17,9 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
 
     private JTextField inputField;
     private JButton sendButton;
-
     private JButton clientConnect;
+
+    private JComboBox<Integer> clientList = null;
 
     private Client client;
 
@@ -28,7 +30,7 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     
         // GUI
         setTitle("Client");
-        setSize(400, 200);
+        setSize(500, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
@@ -47,6 +49,10 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     
         buttonPanel.add(inputField);
         buttonPanel.add(sendButton);
+
+        clientList = new JComboBox<>();
+        buttonPanel.add(clientList);
+        clientList.addActionListener(this);
     
         clientConnect = new JButton("Start Connection"); // Initialize clientConnect as well
     
@@ -85,8 +91,19 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void updateClients(ArrayList<Integer> clientList) {
+        SwingUtilities.invokeLater(() -> {
+            this.clientList.removeAllItems();
 
+            for (Integer client : clientList) {
+                this.clientList.addItem(client);
+                System.out.println("Client Frame has added: " + client + " to list");
+            }
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == clientConnect) {
             try {
                 client.connectToServer();
@@ -96,10 +113,12 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
             } catch (Exception exc) {
                 System.out.println("Connection failed bruv: " + exc);
             }
-        } else if (e.getSource() == sendButton) {
+
+    } else if (e.getSource() == sendButton && clientList.getSelectedItem() != null) {
             String message = inputField.getText();
-            client.sendMessage(message);
-            inputField.setText(""); 
+            client.sendMessage(message, clientList.getItemAt(clientList.getSelectedIndex()));
+            inputField.setText("");
+
         }
     }
 }

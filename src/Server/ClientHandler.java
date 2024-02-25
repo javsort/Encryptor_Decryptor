@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.PublicKey;
 
 
 public class ClientHandler implements Runnable {
@@ -15,15 +16,25 @@ public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private Functions functions = new Functions();
     private Server server;
+    private int ClientHandlerID;
+
+    private PublicKey publicKey;
 
 
-    public ClientHandler(Socket socket, Server server) throws IOException {
-        System.out.println("ClientHandler created with addr: " + socket.getInetAddress() + " & port: " + socket.getPort());
+    public ClientHandler(int Id, Socket socket, Server server) throws IOException, ClassNotFoundException {
+        this.ClientHandlerID = Id;
 
         this.server = server;
         this.clientSocket = socket;
         out = new ObjectOutputStream(clientSocket.getOutputStream());
         in = new ObjectInputStream(clientSocket.getInputStream());
+
+        // Send the client its ID
+        out.writeObject(ClientHandlerID);
+
+        this.publicKey = ((PublicKeyMessage) in.readObject()).getPublicKey();
+
+        System.out.println("ClientHandler " + ClientHandlerID + ", created with addr: " + socket.getInetAddress() + " & port: " + socket.getPort());
     }
 
     @Override
@@ -33,9 +44,9 @@ public class ClientHandler implements Runnable {
                 // Create message by reading mssg
                 Message message = (Message) in.readObject();
 
-                // Decript and display mssg
-                String decryptedMessage = functions.decryptData(message);
-                System.out.println("Received message: " + decryptedMessage);
+                if(message != null && message.getMessage()!= null ){
+                    System.out.println("Message has been received from: " + message.getSenderID() + ". " + message.getUsername() + " forwarding mssg to server & users");
+                }
 
                 // After receiving it in server, send it back out
                 server.forwardMessage(message, this);
@@ -58,7 +69,29 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public PublicKey getPublicKey(){
+        return this.publicKey;
+    }
+
+    public int getId(){
+        return this.ClientHandlerID;
+    }
+
+    public void updateClientList(){
+        try {
+            System.out.println("Updating client list for client: " + this.ClientHandlerID);
+            out.writeObject(server.getPublicKeys());
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void sendMessage(Message message) throws Exception {
+        // Send to client all public keys
+        //out.writeObject(server.getPublicKeys());
+
+        // Send message to client
         out.writeObject(message);
     }
 }
