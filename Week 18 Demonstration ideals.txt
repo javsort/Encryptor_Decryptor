@@ -1,7 +1,7 @@
 Week 18: Demonstration ideals
 - Overall presentation of the app - assumed
 
-- Encryption description - 50% done
+- Asymmetric encryption/description - 100% done
 
 - Message Priority / Queuing display - 25%
 
