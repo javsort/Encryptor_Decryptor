@@ -4,12 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.ServerSocket;
 
 public class ServerFrame extends JFrame implements ActionListener {
     private final Server server;
-
-    Thread serverThread;
 
     // GUI info
     JTextPane text;
@@ -19,18 +16,20 @@ public class ServerFrame extends JFrame implements ActionListener {
     JPanel coverButton;
 
     JButton connect;
+    JButton shutoff;
 
+    // Constructor for frame
     public ServerFrame(int port){
+        // Server
         server = new Server(port);
 
         // GUI
         setTitle("Server");
-        setSize(400, 200);
+        setSize(500, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Container contentPane;
-        contentPane = getContentPane();
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
@@ -38,8 +37,11 @@ public class ServerFrame extends JFrame implements ActionListener {
         buttonPanel.setLayout(new FlowLayout());
 
         connect = new JButton("Turn On");
+        shutoff = new JButton("Turn Off");
 
         buttonPanel.add(connect);
+        buttonPanel.add(shutoff);
+        shutoff.addActionListener(this);
         connect.addActionListener(this);
 
         text = new JTextPane();
@@ -66,15 +68,36 @@ public class ServerFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    // Action Listener
     @Override
     public void actionPerformed(ActionEvent action) {
-        try {
-            server.establishConnection();
-            connect.setText("Connected!");
+        // Turn off server
+        if(action.getSource() == shutoff){
+            if(!server.isRunning){
+                text.setText("Server is already off");
+                return;
+            } else {
+                server.stopServer();
+                text.setText("Server Shut Down");
+            }
+        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Turn on server
+        if(action.getSource() == connect){
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    server.establishConnection();
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    connect.setText("Connected!");
+                }
+            };
+            worker.execute();
+
         }
     }
-
 }
