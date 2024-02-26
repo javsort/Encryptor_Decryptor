@@ -5,7 +5,9 @@ import java.util.*;
 
 public class Message implements Serializable {
 
-    //private SecretKey key;
+    // Serializable is used to send objects over the network
+
+    // Message Properties
     private byte[] message;
     private Date time;
     private int senderID;
@@ -13,8 +15,9 @@ public class Message implements Serializable {
 
     private int receiverID;
 
+    // Constructor - uses the sender's ID, username, the encrypted message and the receiver's ID for server handling
     public Message(int id, String user, byte[] encrypted, int destId){
-        this.time = new Date();
+        this.time = new Date();         // Set the time of the message - to be used for GUI
 
         this.senderID = id;
         this.username = user;
@@ -23,14 +26,12 @@ public class Message implements Serializable {
         this.receiverID = destId;
     }
 
+    // Empty constructor for publicKeyMessage sending
     public Message(){
         this.time = new Date();
     }
 
-    //public SecretKey getKey(){
-    //    return this.key;
-    //}
-
+    // Getters
     public byte[] getMessage(){
         return this.message;
     }

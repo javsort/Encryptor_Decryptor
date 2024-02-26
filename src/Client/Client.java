@@ -124,12 +124,20 @@ public class Client {
     }
 
     // Update the local public keys
-    public void updateKeys(HashMap<Integer, PublicKey> updatedKeys){
-        localUserList = updatedKeys;
+    public void updateKeys(HashMap<Integer, PublicKey> receivedKeys){
+        HashMap<Integer, PublicKey> updatedKeys = receivedKeys;
+
+        System.out.println("Client " + id + " has received keys from server." + "Size of keys: " + updatedKeys.size() + " and clients: " + updatedKeys.keySet() + " from server.");
+
+        this.localUserList.clear();
+        this.localUserList.putAll(updatedKeys);
 
         ArrayList<Integer> clients = new ArrayList<>(localUserList.keySet());
 
         System.out.println("Client " + id + " has updated keys and sending to observer.");
+        System.out.println("Size of keys: " + localUserList.size() + " and clients: " + clients.size() + " to observer.");
+        System.out.println("Keys: \n" + localUserList);
+
         observer.updateClients(clients);
 
     }
@@ -141,6 +149,13 @@ public class Client {
             public void run(){
                 while (true){
                     receiveMessages();
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
         }).start();

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ClientFrame extends JFrame implements ActionListener, ClientObserver {
-
     // GUI info
     private JTextPane text;
     private JPanel buttonPanel;
@@ -19,8 +18,10 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     private JButton sendButton;
     private JButton clientConnect;
 
+    // CLIENT LIST IS UPDATED AS UPDATED
     private JComboBox<Integer> clientList = null;
 
+    // Client assigned to the frame
     private Client client;
 
     public ClientFrame(String addr, int port){
@@ -61,8 +62,6 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     
         text = new JTextPane();
         text.setText("Awaiting Data...");
-    
-
 
         // Covers
         coverButton = new JPanel();
@@ -75,7 +74,6 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         coverText.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
         coverText.setBackground(Color.LIGHT_GRAY);
 
-
         coverText.add(text);
         coverButton.add(buttonPanel);
 
@@ -85,11 +83,13 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         setVisible(true);
     }
 
+    // Observer(this) reads message from client
     @Override
     public void updateMessage(String message) {
         text.setText(message);
     }
 
+    // Observer(this) receives updated client list
     @Override
     public void updateClients(ArrayList<Integer> clientList) {
         SwingUtilities.invokeLater(() -> {
@@ -102,6 +102,7 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         });
     }
 
+    // Operations on button click
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == clientConnect) {
