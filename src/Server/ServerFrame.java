@@ -8,8 +8,6 @@ import java.awt.event.ActionListener;
 public class ServerFrame extends JFrame implements ActionListener {
     private final Server server;
 
-    Thread serverThread;
-
     // GUI info
     JTextPane text;
     JPanel buttonPanel;
@@ -20,12 +18,14 @@ public class ServerFrame extends JFrame implements ActionListener {
     JButton connect;
     JButton shutoff;
 
+    // Constructor for frame
     public ServerFrame(int port){
+        // Server
         server = new Server(port);
 
         // GUI
         setTitle("Server");
-        setSize(400, 200);
+        setSize(500, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -65,12 +65,13 @@ public class ServerFrame extends JFrame implements ActionListener {
         contentPane.add(coverText, BorderLayout.CENTER);
         contentPane.add(coverButton, BorderLayout.SOUTH);
 
-
         setVisible(true);
     }
 
+    // Action Listener
     @Override
     public void actionPerformed(ActionEvent action) {
+        // Turn off server
         if(action.getSource() == shutoff){
             if(!server.isRunning){
                 text.setText("Server is already off");
@@ -81,6 +82,7 @@ public class ServerFrame extends JFrame implements ActionListener {
             }
         }
 
+        // Turn on server
         if(action.getSource() == connect){
             SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Override
@@ -96,14 +98,6 @@ public class ServerFrame extends JFrame implements ActionListener {
             };
             worker.execute();
 
-            /*try {
-                server.establishConnection();
-                connect.setText("Connected!");
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
         }
     }
-
 }

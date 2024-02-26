@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ClientFrame extends JFrame implements ActionListener, ClientObserver {
-
     // GUI info
     private JTextPane text;
     private JPanel buttonPanel;
@@ -16,9 +16,12 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
 
     private JTextField inputField;
     private JButton sendButton;
-
     private JButton clientConnect;
 
+    // CLIENT LIST IS UPDATED AS UPDATED
+    private JComboBox<Integer> clientList = null;
+
+    // Client assigned to the frame
     private Client client;
 
     public ClientFrame(String addr, int port){
@@ -28,7 +31,7 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     
         // GUI
         setTitle("Client");
-        setSize(400, 200);
+        setSize(500, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
@@ -47,6 +50,10 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     
         buttonPanel.add(inputField);
         buttonPanel.add(sendButton);
+
+        clientList = new JComboBox<>();
+        buttonPanel.add(clientList);
+        clientList.addActionListener(this);
     
         clientConnect = new JButton("Start Connection"); // Initialize clientConnect as well
     
@@ -55,8 +62,6 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     
         text = new JTextPane();
         text.setText("Awaiting Data...");
-    
-
 
         // Covers
         coverButton = new JPanel();
@@ -69,7 +74,6 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         coverText.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
         coverText.setBackground(Color.LIGHT_GRAY);
 
-
         coverText.add(text);
         coverButton.add(buttonPanel);
 
@@ -79,14 +83,28 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         setVisible(true);
     }
 
+    // Observer(this) reads message from client
     @Override
     public void updateMessage(String message) {
         text.setText(message);
     }
 
+    // Observer(this) receives updated client list
+    @Override
+    public void updateClients(ArrayList<Integer> clientList) {
+        SwingUtilities.invokeLater(() -> {
+            this.clientList.removeAllItems();
+
+            for (Integer client : clientList) {
+                this.clientList.addItem(client);
+                System.out.println("Client Frame has added: " + client + " to list");
+            }
+        });
+    }
+
+    // Operations on button click
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if (e.getSource() == clientConnect) {
             try {
                 client.connectToServer();
@@ -96,10 +114,12 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
             } catch (Exception exc) {
                 System.out.println("Connection failed bruv: " + exc);
             }
-        } else if (e.getSource() == sendButton) {
+
+    } else if (e.getSource() == sendButton && clientList.getSelectedItem() != null) {
             String message = inputField.getText();
-            client.sendMessage(message);
-            inputField.setText(""); 
+            client.sendMessage(message, clientList.getItemAt(clientList.getSelectedIndex()));
+            inputField.setText("");
+
         }
     }
 }
