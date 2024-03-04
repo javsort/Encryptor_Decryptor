@@ -21,6 +21,17 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     private JButton setUsernameButton;
     private JButton clientConnect;
 
+    // Color and texturing
+    private String buttonFieldColor = "#01A7C2";
+    private String buttonColor = "#020887";
+    private String buttonBorderColor = "#2081C3";
+    private String textAreaColor = "#F5F5F5";
+    private String borderColor = "#37392E";
+
+    private int thickness = 3;
+    private int buttonHeight = 30;
+    private int fontsize = 13;
+
     // Client list is updated as updated
     private JComboBox<Integer> clientList = null;
 
@@ -34,7 +45,7 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
 
         // GUI
         setTitle("Client");
-        setSize(500, 300);
+        setSize(800, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -49,25 +60,46 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         usernameField = new JTextField(15);
         
         // Same for the buttons
-        sendButton = new JButton("Send");
-        setUsernameButton = new JButton("Set Username");
-        clientConnect = new JButton("Start Connection"); 
+        sendButton = new JButton(" Send ");
+        setUsernameButton = new JButton(" Set Username ");                    // Externalize
+        clientConnect = new JButton(" Start Connection ");
+        
+        // Color buttons
+        sendButton.setBackground(Color.decode(buttonColor));
+        sendButton.setBorder(BorderFactory.createLineBorder(Color.decode(buttonBorderColor)));
+        sendButton.setForeground(Color.WHITE);
+        sendButton.setPreferredSize(new Dimension(100, buttonHeight));
+        sendButton.setFont(new Font("Arial", Font.BOLD, fontsize));
+
+        setUsernameButton.setBackground(Color.decode(buttonColor));        // Externalize
+        setUsernameButton.setBorder(BorderFactory.createLineBorder(Color.decode(buttonBorderColor)));  // Externalize
+        setUsernameButton.setForeground(Color.WHITE);                      // Externalize
+        setUsernameButton.setPreferredSize(new Dimension(100, buttonHeight));  // Externalize
+        setUsernameButton.setFont(new Font("Arial", Font.BOLD, fontsize));       // Externalize
+
+        clientConnect.setBackground(Color.decode(buttonColor));
+        clientConnect.setBorder(BorderFactory.createLineBorder(Color.decode(buttonBorderColor)));
+        clientConnect.setForeground(Color.WHITE);
+        clientConnect.setPreferredSize(new Dimension(150, buttonHeight));
+        clientConnect.setFont(new Font("Arial", Font.BOLD, fontsize));
+
 
         //add action listeners
         sendButton.addActionListener(this);
-        setUsernameButton.addActionListener(this);
+        setUsernameButton.addActionListener(this);                        // Externalize    
         clientConnect.addActionListener(this);
 
         buttonPanel.add(inputField);
         buttonPanel.add(sendButton);
-        buttonPanel.add(usernameField);
-        buttonPanel.add(setUsernameButton);
+        buttonPanel.add(usernameField);                                  // Externalize
+        buttonPanel.add(setUsernameButton);                         // Externalize
 
         clientList = new JComboBox<>();
         buttonPanel.add(clientList);
         clientList.addActionListener(this);
 
         buttonPanel.add(clientConnect);
+        buttonPanel.setBackground(Color.decode(buttonFieldColor));
 
         text = new JTextPane();
         text.setText("Awaiting Data...");
@@ -75,13 +107,13 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         // Covers
         coverButton = new JPanel();
         coverButton.setLayout(new FlowLayout());
-        coverButton.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-        coverButton.setBackground(Color.LIGHT_GRAY);
+        coverButton.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor), thickness));
+        coverButton.setBackground(Color.decode(buttonFieldColor));
 
         coverText = new JPanel();
         coverText.setLayout(new FlowLayout());
-        coverText.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-        coverText.setBackground(Color.LIGHT_GRAY);
+        coverText.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor), thickness));
+        coverText.setBackground(Color.decode(textAreaColor));
 
         coverText.add(text);
         coverButton.add(buttonPanel);
