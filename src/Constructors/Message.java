@@ -5,23 +5,17 @@ import java.util.*;
 
 public class Message implements Serializable {
 
-    // Serializable is used to send objects over the network
-
-    // Message Properties
     private byte[] message;
     private Date time;
     private int senderID;
-    private String username;
-
+    private String senderName;
     private int receiverID;
 
-    // Constructor - uses the sender's ID, username, the encrypted message and the receiver's ID for server handling
+    // constructor uses the sender's ID, username(sender's name), the encrypted message and receiver's ID for server handling
     public Message(int id, String user, byte[] encrypted, int destId){
-        this.time = new Date();         // Set the time of the message - to be used for GUI
-
+        this.time = new Date();
         this.senderID = id;
-        this.username = user;
-
+        this.senderName = user;
         this.message = encrypted;
         this.receiverID = destId;
     }
@@ -31,13 +25,12 @@ public class Message implements Serializable {
         this.time = new Date();
     }
 
-    // Getters
     public byte[] getMessage(){
         return this.message;
     }
 
-    public String getUsername(){
-        return this.username;
+    public String getSenderName() {
+        return this.senderName;
     }
 
     public int getSenderID(){

@@ -36,6 +36,9 @@ public class Client {
     // List of other clients public keys
     private HashMap<Integer, PublicKey> localUserList;
 
+    // ArrayList to save last three messages
+    private ArrayList<String> messageHistory = new ArrayList<>();
+
     // Observer for JFrame
     private ClientObserver observer;
 
@@ -64,6 +67,7 @@ public class Client {
 
         // Start the thread for handling timings and queued messages
         new Thread(this::handleTimingsAndQueuedMessages).start();
+        
     }
 
     // Register observer for frame
@@ -108,10 +112,18 @@ public class Client {
                 // Create message by reading mssg
             } else if(receivedObject instanceof Message){
                 Message message = (Message) receivedObject;
-                System.out.println("Message has been received from: " + message.getSenderID() + ". " + message.getUsername() + " forwarding mssg to server & users");
+                System.out.println("Message has been received from: " + message.getSenderID() + ". " + message.getSenderName() + " forwarding mssg to server & users");
 
                 if(message.getMessage() != null) {
-                    observer.updateMessage(functions.decryptData(message, privateKey));
+                    String decryptedMessage = message.getSenderName() + ": " + functions.decryptData(message, privateKey);
+                    //String decryptedMessage = functions.decryptData(message, privateKey);
+                    observer.updateMessage(decryptedMessage);
+
+                    // Add the message to the message history
+                    if (messageHistory.size() == 3) {
+                        messageHistory.remove(0); // Remove the oldest message if history size is 3
+                    }
+                    messageHistory.add(decryptedMessage); // Add the new message
                 }
 
             } else {
@@ -225,4 +237,9 @@ public class Client {
             System.out.println("Failed to send message");
         }
     }
+
+    // Set username
+    public void setUsername(String username) {
+        this.username = username;
+}
 }

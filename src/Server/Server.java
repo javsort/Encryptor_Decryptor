@@ -10,145 +10,127 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-// Server class - to handle the server and the clientHandlers
 public class Server {
     private ServerSocket serverSocket;
-
-    // ExecutorService for the threads - clients
     private ExecutorService executorService;
-
-    // List of clients
     private List<ClientHandler> clients = new ArrayList<>();
-
-    // List of public keys
     private HashMap<Integer, PublicKey> publicKeys = new HashMap<>();
-
-    // Server settings
     boolean isRunning;
     private int port;
-
-    // flags for updating client list
     private boolean newClient = false;
     private boolean clientDisconnected = false;
+    private boolean isSleeping = false;
+    private ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<>();
 
-    // Constructor
-    public Server(int port){
+    public Server(int port) {
         this.port = port;
-
         try {
             serverSocket = new ServerSocket(this.port);
-            executorService = Executors.newFixedThreadPool(10);     // # of threads for clients ig
+            executorService = Executors.newFixedThreadPool(10);
             isRunning = true;
-
             System.out.println("Server started");
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
-    // Turn on server and establish connection to receive new clients and update the client list
-    public void establishConnection(){
-        while(isRunning){
+    public void establishConnection() {
+        while (isRunning) {
             try {
-
-                // Accept the client
                 Socket socket = serverSocket.accept();
-
-                if(socket != null){
+                if (socket != null) {
                     System.out.println("Client accepted" + socket.getInetAddress() + ":" + socket.getPort());
-
-                    // Create a new ClientHandler
-                    ClientHandler clientHandler = new ClientHandler(generateID(), socket,this);
-
-                    // Add it to the clients list
+                    ClientHandler clientHandler = new ClientHandler(generateID(), socket, this);
                     clients.add(clientHandler);
-
-                    // Execute the clientHandler
                     executorService.execute(clientHandler);
-
-                    // Add the public key to the publicKeys list along with ClientHandlerId
                     publicKeys.put(clientHandler.getId(), clientHandler.getPublicKey());
-
-                    // Flag to update clientlist
                     newClient = true;
                 }
 
-                // Update the client list every time a new client is added or disconnected
-                if(!clients.isEmpty() && newClient || !clients.isEmpty() && clientDisconnected){
+                if (!clients.isEmpty() && (newClient || clientDisconnected)) {
                     newClient = false;
                     clientDisconnected = false;
-
-                    // Update the client list
-                    for(ClientHandler clientHndlr : clients){
-                        clientHndlr.updateClientList();
-                        System.out.println("ClientHandler " + clientHndlr.getId() + ", has been updated");
-
-                    }
+                    updateClientLists();
                 }
-
-                // Sleep for a bit
                 Thread.sleep(500);
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-
             }
         }
     }
 
-    // Generate ID for the new Client & ClientHandler
-    public int generateID(){
+    private void updateClientLists() {
+        for (ClientHandler clientHandler : clients) {
+            clientHandler.updateClientList();
+        }
+    }
+
+    public int generateID() {
         return clients.size() + 1;
     }
 
-    // Remove the client from the list when disconnected
-    public void removeClient(ClientHandler disconnected){
+    public void removeClient(ClientHandler disconnected) {
         clients.remove(disconnected);
+        publicKeys.remove(disconnected.getId());
         clientDisconnected = true;
     }
 
-    // Stop the server
-    public void stopServer(){
+    public void stopServer() {
         isRunning = false;
         executorService.shutdown();
-
     }
 
-    // Get the public keys
-    public HashMap<Integer, PublicKey> getPublicKeys(){
-        return this.publicKeys;
+    public HashMap<Integer, PublicKey> getPublicKeys() {
+        return new HashMap<>(publicKeys);
     }
 
-    // Forward the message to the client
-    public void forwardMessage(Message message, ClientHandler sender){
-        int destination = message.getReceiverID();
-
-        if(destination != 0){
-            for(ClientHandler client : clients){
-                if(client.getId() == destination){
-                    try {
-                        client.sendMessage(message);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else {
-            broadcastMessage(message, sender);
+    public synchronized void setSleeping(boolean sleeping) {
+        this.isSleeping = sleeping;
+        if (!isSleeping) {
+            processQueuedMessages();
         }
     }
 
-    // Broadcast the message to all clients
-    public void broadcastMessage(Message message, ClientHandler sender){
-        for(ClientHandler client : clients){
-            if(client.getId() != sender.getId()){
+    private void processQueuedMessages() {
+        while (!messageQueue.isEmpty()) {
+            Message message = messageQueue.poll();
+            forwardMessage(message, null); // Assuming forwardMessage can handle a null sender
+        }
+    }
+
+    public void forwardMessage(Message message, ClientHandler sender) {
+        if (isSleeping) {
+            messageQueue.add(message);
+        } else {
+            int destination = message.getReceiverID();
+            if (destination != 0) {
+                clients.stream()
+                        .filter(client -> client.getId() == destination)
+                        .findFirst()
+                        .ifPresent(client -> {
+                            try {
+                                client.sendMessage(message);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+            } else {
+                broadcastMessage(message, sender);
+            }
+        }
+    }
+
+    public void broadcastMessage(Message message, ClientHandler sender) {
+        clients.forEach(client -> {
+            if (client != sender) {
                 try {
                     client.sendMessage(message);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }
+        });
     }
 }

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ClientFrame extends JFrame implements ActionListener, ClientObserver {
     // GUI info
@@ -15,10 +16,12 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     private JPanel coverButton;
 
     private JTextField inputField;
+    private JTextField usernameField;
     private JButton sendButton;
+    private JButton setUsernameButton;
     private JButton clientConnect;
 
-    // CLIENT LIST IS UPDATED AS UPDATED
+    // Client list is updated as updated
     private JComboBox<Integer> clientList = null;
 
     // Client assigned to the frame
@@ -28,38 +31,44 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         // Client
         client = new Client(addr, port);
         client.registerObserver(this);
-    
+
         // GUI
         setTitle("Client");
         setSize(500, 300);
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
+
         Container contentPane;
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-    
+
         buttonPanel = new JPanel();  // You need to initialize buttonPanel before adding components
         buttonPanel.setLayout(new FlowLayout());
-    
-        inputField = new JTextField(15); // Ensure this line is before buttonPanel.add(inputField);
-    
-        // Same for the sendButton
+
+        inputField = new JTextField(15);
+        usernameField = new JTextField(15);
+        
+        // Same for the buttons
         sendButton = new JButton("Send");
+        setUsernameButton = new JButton("Set Username");
+        clientConnect = new JButton("Start Connection"); 
+
+        //add action listeners
         sendButton.addActionListener(this);
-    
+        setUsernameButton.addActionListener(this);
+        clientConnect.addActionListener(this);
+
         buttonPanel.add(inputField);
         buttonPanel.add(sendButton);
+        buttonPanel.add(usernameField);
+        buttonPanel.add(setUsernameButton);
 
         clientList = new JComboBox<>();
         buttonPanel.add(clientList);
         clientList.addActionListener(this);
-    
-        clientConnect = new JButton("Start Connection"); // Initialize clientConnect as well
-    
+
         buttonPanel.add(clientConnect);
-        clientConnect.addActionListener(this);
-    
+
         text = new JTextPane();
         text.setText("Awaiting Data...");
 
@@ -85,10 +94,21 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
 
     // Observer(this) reads message from client
     @Override
-    public void updateMessage(String message) {
-        text.setText(message);
-    }
+public void updateMessage(String message) {
+    SwingUtilities.invokeLater(() -> {
+        String existingContent = text.getText();
+        String[] messages = existingContent.split("\n");
+        ArrayList<String> messageList = new ArrayList<>(Arrays.asList(messages));
+        messageList.add(message);
+        
+        // Get only last 3 messages
+        int start = messageList.size() > 3 ? messageList.size() - 3 : 0;
+        messageList = new ArrayList<>(messageList.subList(start, messageList.size()));
 
+        String newContent = String.join("\n", messageList);
+        text.setText(newContent);
+    });
+}
     // Observer(this) receives updated client list
     @Override
     public void updateClients(ArrayList<Integer> clientList) {
@@ -105,7 +125,13 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
     // Operations on button click
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == clientConnect) {
+        if (e.getSource() == setUsernameButton) {
+            String username = usernameField.getText();
+            client.setUsername(username);
+            usernameField.setText("");
+        }
+
+        else if (e.getSource() == clientConnect) {
             try {
                 client.connectToServer();
                 clientConnect.setText("Connected!");
@@ -115,11 +141,10 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
                 System.out.println("Connection failed bruv: " + exc);
             }
 
-    } else if (e.getSource() == sendButton && clientList.getSelectedItem() != null) {
+        } else if (e.getSource() == sendButton && clientList.getSelectedItem() != null) {
             String message = inputField.getText();
             client.sendMessage(message, clientList.getItemAt(clientList.getSelectedIndex()));
             inputField.setText("");
-
         }
     }
 }
