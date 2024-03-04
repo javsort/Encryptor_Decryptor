@@ -40,6 +40,10 @@ public class Server {
         while (isRunning) {
             try {
                 Socket socket = serverSocket.accept();
+
+                // Perform the 3-way handshake
+                performThreeWayHandshake(socket);
+
                 if (socket != null) {
                     System.out.println("Client accepted" + socket.getInetAddress() + ":" + socket.getPort());
                     ClientHandler clientHandler = new ClientHandler(generateID(), socket, this);
@@ -60,6 +64,38 @@ public class Server {
             }
         }
     }
+
+    // Perform the 3-way handshake
+    public void performThreeWayHandshake(Socket socket) {
+        try {
+            System.out.println("Performing 3-way handshake Client");
+    
+            // Create ObjectOutputStream for sending data
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+    
+            // Create ObjectInputStream for receiving data
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+    
+            // Step 1: Receive the SYN from the client
+            String receivedSYN = (String) ois.readObject();
+            System.out.println("Received SYN: " + receivedSYN);
+    
+            // Step 2: Send the SYN-ACK to the client
+            oos.writeObject("SYN-ACK");
+            oos.flush(); // Ensure it's sent immediately
+            System.out.println("Sent SYN-ACK");
+    
+            // Step 3: Receive the ACK from the client
+            String receivedACK = (String) ois.readObject();
+            System.out.println("Received ACK: " + receivedACK);
+    
+            System.out.println("3-way handshake completed successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Handshake failed: " + e.getMessage());
+        }
+    }
+    
 
     private void updateClientLists() {
         for (ClientHandler clientHandler : clients) {

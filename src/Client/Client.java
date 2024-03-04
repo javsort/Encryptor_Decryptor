@@ -81,6 +81,10 @@ public class Client {
         try {
             // Connect to the server
             socket = new Socket(address, port);
+
+            // Perform the simulated TCP three-way handshake
+            performHandshakeClient();
+
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             System.out.println("Connected");
@@ -96,6 +100,36 @@ public class Client {
 
         } catch (Exception exc) {
             System.out.println("Connection failed bruv: " + exc);
+        }
+    }
+
+    // Perform the simulated TCP three-way handshake
+    private void performHandshakeClient() {
+        try {
+
+            System.out.println("Performing 3-way handshake Client");
+            // Send SYN request to server
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+            
+            // Step 1: Send SYN
+            oos.writeObject("SYN");
+            System.out.println("Sent SYN");
+            System.out.println("Step 1 done!");
+
+            // Step 2: Receive SYN-ACK
+            String receivedSYNACK = (String) ois.readObject();
+            System.out.println("Received SYN-ACK: " + receivedSYNACK);
+            System.out.println("Step 2 done!");
+
+            // Step 3: Send ACK
+            oos.writeObject("ACK");
+            System.out.println("Sent ACK");
+
+            System.out.println("3-way handshake completed successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
