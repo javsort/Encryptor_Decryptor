@@ -85,7 +85,7 @@ public class Server {
     public HashMap<Integer, PublicKey> getPublicKeys() {
         return new HashMap<>(publicKeys);
     }
-
+    
     public synchronized void setSleeping(boolean sleeping) {
         this.isSleeping = sleeping;
         if (!isSleeping) {
@@ -96,7 +96,7 @@ public class Server {
     private void processQueuedMessages() {
         while (!messageQueue.isEmpty()) {
             Message message = messageQueue.poll();
-            forwardMessage(message, null); // Assuming forwardMessage can handle a null sender
+            forwardMessage(message, null);
         }
     }
 
