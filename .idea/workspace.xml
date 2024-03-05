@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8353246a-03ae-4f07-ae59-034a468e8ca2" name="Changes" comment="Asymmetric encryption fully implemented, just as clientlist handles new connection and disconnections. Basic functionality implemented.">
+      <change beforePath="$PROJECT_DIR$/src/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constructors/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constructors/Functions.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="b8228c7c-862b-42d7-ad4c-cb768a9acdb8" />
+        <option name="url" value="https://github.com/javsort/Encryptor_Decryptor.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2c5LkduNll5bxzFtpER6MERr5pb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;21&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/javie/OneDrive/ESCUELA/2nd_year/Software_Design_Studio_Project/Aerotelcel&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Application.ServerController">
+    <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Client.Client" />
+      <module name="Encryptor_Decryptor" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ClientController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ClientController" />
+      <module name="Encryptor_Decryptor" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value=".*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Controller" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Controller.Controller" />
+      <module name="Encryptor_Decryptor" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value=".*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Server.Server" />
+      <module name="Encryptor_Decryptor" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ServerController" />
+      <module name="Encryptor_Decryptor" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value=".*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ServerController" />
+        <item itemvalue="Application.ClientController" />
+        <item itemvalue="Application.Controller" />
+        <item itemvalue="Application.Client" />
+        <item itemvalue="Application.Server" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8353246a-03ae-4f07-ae59-034a468e8ca2" name="Changes" comment="" />
+      <created>1707396636334</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1707396636334</updated>
+      <workItem from="1707396637643" duration="795000" />
+      <workItem from="1707596829895" duration="24000" />
+      <workItem from="1708216744947" duration="1347000" />
+      <workItem from="1708271538716" duration="895000" />
+      <workItem from="1708380334516" duration="7918000" />
+      <workItem from="1708423933691" duration="4202000" />
+      <workItem from="1708432589579" duration="100000" />
+      <workItem from="1708608816805" duration="6651000" />
+      <workItem from="1708620089628" duration="6162000" />
+      <workItem from="1708626405318" duration="2141000" />
+      <workItem from="1708628592148" duration="110000" />
+      <workItem from="1708628845910" duration="21000" />
+      <workItem from="1708628874577" duration="60000" />
+      <workItem from="1708628937631" duration="51000" />
+      <workItem from="1708629001053" duration="92000" />
+      <workItem from="1708629138394" duration="71000" />
+      <workItem from="1708731859018" duration="172000" />
+      <workItem from="1708732053846" duration="2120000" />
+      <workItem from="1708734214544" duration="8284000" />
+      <workItem from="1708774735366" duration="6006000" />
+      <workItem from="1708857774015" duration="13243000" />
+      <workItem from="1708960047585" duration="7235000" />
+      <workItem from="1708967371019" duration="84000" />
+      <workItem from="1708967458673" duration="281000" />
+      <workItem from="1709029145946" duration="1037000" />
+      <workItem from="1709031303906" duration="2135000" />
+      <workItem from="1709060337871" duration="537000" />
+      <workItem from="1709544806443" duration="1176000" />
+      <workItem from="1709557241308" duration="197000" />
+    </task>
+    <task id="LOCAL-00001" summary="Test both on main and TestingBranch">
+      <created>1707396903063</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707396903063</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Message update">
+      <created>1708216874627</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1708216874627</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Restructure in packaging">
+      <created>1708380886665</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1708380886665</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Server Reestructuring">
+      <created>1708384213120</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1708384213120</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Client Reestructuring, receives messages, missing sending implementation">
+      <created>1708388285409</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708388285409</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Javier branch test">
+      <created>1708388485233</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708388485233</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Small message update">
+      <created>1708426071628</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708426071628</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added demonstration ideals">
+      <created>1708429637325</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708429637325</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Client handler attempts reconnection if client is lost">
+      <created>1708616775525</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1708616775525</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Properly closes socket, in &amp; out whenever client disconnects, public-key encryption implementation coming next">
+      <created>1708621117969</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1708621117969</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Still missing assymmetric encryption, BUT should work messaging system w different IPs">
+      <created>1708627901229</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1708627901229</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Still missing assymmetric encryption, BUT should work messaging system w different IPs">
+      <created>1708628170100</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1708628170100</updated>
+    </task>
+    <task id="LOCAL-00013" summary="File Restructuring - All modules now in src">
+      <created>1708732696895</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1708732696895</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Messaging between two clients is now available - 24/02/24 - 02:04">
+      <created>1708736695324</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1708736695324</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Messaging between two devices is now possible, not so good in BC conditions but it works - 24/02/24 - 02:37">
+      <created>1708738677992</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1708738677992</updated>
+    </task>
+    <task id="LOCAL-00016" summary="First full on attempt at assymetric encryption, fixing buggy forwarding, but message is getting to server. JComboBox for user viewership added - 25/02/2024, 17:42">
+      <created>1708879377445</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1708879377445</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Asymmetric encryption fully implemented, just as clientlist handles new connection and disconnections. Basic functionality implemented.">
+      <created>1708966389732</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1708966389732</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Asymmetric encryption fully implemented, just as clientlist handles new connection and disconnections. Basic functionality implemented.">
+      <created>1708967157540</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1708967157540</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Test both on main and TestingBranch" />
+    <MESSAGE value="Message update" />
+    <MESSAGE value="Restructure in packaging" />
+    <MESSAGE value="Server Reestructuring" />
+    <MESSAGE value="Client Reestructuring, receives messages, missing sending implementation" />
+    <MESSAGE value="Javier branch test" />
+    <MESSAGE value="Small message update" />
+    <MESSAGE value="Added demonstration ideals" />
+    <MESSAGE value="Client handler attempts reconnection if client is lost" />
+    <MESSAGE value="Properly closes socket, in &amp; out whenever client disconnects, public-key encryption implementation coming next" />
+    <MESSAGE value="Still missing assymmetric encryption, BUT should work messaging system w different IPs" />
+    <MESSAGE value="File Restructuring - All modules now in src" />
+    <MESSAGE value="Messaging between two clients is now available - 24/02/24 - 02:04" />
+    <MESSAGE value="Messaging between two devices is now possible, not so good in BC conditions but it works - 24/02/24 - 02:37" />
+    <MESSAGE value="First full on attempt at assymetric encryption, fixing buggy forwarding, but message is getting to server. JComboBox for user viewership added - 25/02/2024, 17:42" />
+    <MESSAGE value="Asymmetric encryption fully implemented, just as clientlist handles new connection and disconnections. Basic functionality implemented." />
+    <option name="LAST_COMMIT_MESSAGE" value="Asymmetric encryption fully implemented, just as clientlist handles new connection and disconnections. Basic functionality implemented." />
+  </component>
+</project>

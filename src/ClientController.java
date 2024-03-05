@@ -5,6 +5,5 @@ public class ClientController {
         System.out.println("Initializing Client");
 
         ClientFrame client = new ClientFrame("127.0.0.1", 5000);
-
     }
 }
