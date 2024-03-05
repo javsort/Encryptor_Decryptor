@@ -3,12 +3,12 @@ Week 18: Demonstration ideals
 
 - Asymmetric encryption/description - 100% done
 
-- Message Priority / Queuing display - 25%
+- Message Priority / Queuing display - 75%
 
-- Memory of messages display	- TBI
+- Memory of messages display	- 50%, we're missing storing the user's messages in its own frame
 
 - Displaying stress testing
 	- Max client handling	-	40%
 	- Max message input	- 	? %
 
-- Handshake (?)
+- Handshake - 100%
