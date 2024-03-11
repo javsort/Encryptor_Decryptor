@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8353246a-03ae-4f07-ae59-034a468e8ca2" name="Changes" comment="Asymmetric encryption fully implemented, just as clientlist handles new connection and disconnections. Basic functionality implemented.">
-      <change beforePath="$PROJECT_DIR$/src/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constructors/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constructors/Functions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Encryptor_Decryptor.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Encryptor_Decryptor.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +48,10 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2c5LkduNll5bxzFtpER6MERr5pb" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -55,10 +59,14 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.ClientController.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServerController.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;javier&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;21&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/javie/OneDrive/ESCUELA/2nd_year/Software_Design_Studio_Project/Aerotelcel&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -68,11 +76,17 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.ServerController">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\javie\Documents\Code_Man_Laptop\Java\Encryptor_Decryptor\bin\src" />
+      <recent name="C:\Users\javie\Documents\Code_Man_Laptop\Java\Encryptor_Decryptor\bin" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ClientController">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Client.Client" />
       <module name="Encryptor_Decryptor" />
@@ -128,8 +142,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ServerController" />
         <item itemvalue="Application.ClientController" />
+        <item itemvalue="Application.ServerController" />
         <item itemvalue="Application.Controller" />
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
@@ -173,6 +187,10 @@
       <workItem from="1709060337871" duration="537000" />
       <workItem from="1709544806443" duration="1176000" />
       <workItem from="1709557241308" duration="197000" />
+      <workItem from="1709839941221" duration="135000" />
+      <workItem from="1710170872899" duration="1599000" />
+      <workItem from="1710172663354" duration="2656000" />
+      <workItem from="1710175349058" duration="216000" />
     </task>
     <task id="LOCAL-00001" summary="Test both on main and TestingBranch">
       <created>1707396903063</created>
