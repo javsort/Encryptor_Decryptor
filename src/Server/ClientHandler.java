@@ -56,8 +56,8 @@ public class ClientHandler implements Runnable {
                 // Create message by reading mssg from Client
                 Message message = (Message) in.readObject();
 
-                if(message != null && message.getMessage()!= null ){
-                    System.out.println("Message has been received from: " + message.getSenderID() + ". " + message.getSenderName() + " forwarding mssg to: " + message.getReceiverID() + ".\n");
+                if(message != null && message.getMessage() != null ){
+                    System.out.println("Message has been received from: " + message.getSenderID() + "-" + message.getSenderName() + " forwarding mssg to: " + message.getReceiverID() + ".\n");
                 }
 
                 // After receiving it in server, send it back out

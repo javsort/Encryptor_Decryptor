@@ -1,7 +1,8 @@
 package Constructors;
 
 import java.io.Serializable;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Message implements Serializable {
 
@@ -41,7 +42,10 @@ public class Message implements Serializable {
         return this.receiverID;
     }
 
-    public Date getTime(){
-        return this.time;
+    public String getTime(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String formattedDate = formatter.format(this.time);
+
+        return formattedDate;
     }
 }

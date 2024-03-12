@@ -16,7 +16,9 @@ public class Server {
     private ServerSocket serverSocket;
     private ExecutorService executorService;
     private List<ClientHandler> clients = new ArrayList<>();
+
     private HashMap<Integer, PublicKey> publicKeys = new HashMap<>();
+
     boolean isRunning;
     private int port;
     private boolean newClient = false;
@@ -24,16 +26,23 @@ public class Server {
     private boolean isSleeping = false;
     private ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<>();
 
-    public Server(int port) {
+    private ServerObserver observer;
+
+    public Server(int port, int clientSize) {
         this.port = port;
         try {
             serverSocket = new ServerSocket(this.port);
-            executorService = Executors.newFixedThreadPool(10);
+            executorService = Executors.newFixedThreadPool(clientSize);
             isRunning = true;
-            System.out.println("Server started");
+            System.out.println("Server started with port: " + this.port + " and max clients: " + clientSize + "\n");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void registerObserver(ServerObserver observer) {
+        this.observer = observer;
     }
 
     public void establishConnection() {
@@ -59,6 +68,7 @@ public class Server {
                     updateClientLists();
                 }
                 Thread.sleep(500);
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -116,16 +126,20 @@ public class Server {
     public void stopServer() {
         isRunning = false;
         executorService.shutdown();
+        System.out.println("Server stopped");
     }
 
     public HashMap<Integer, PublicKey> getPublicKeys() {
         return new HashMap<>(publicKeys);
     }
-
+    
     public synchronized void setSleeping(boolean sleeping) {
         this.isSleeping = sleeping;
         if (!isSleeping) {
+            System.out.println("Waking up server");
             processQueuedMessages();
+        } else {
+            System.out.println("Server is now sleeping");
         }
     }
 
@@ -148,6 +162,7 @@ public class Server {
                         .ifPresent(client -> {
                             try {
                                 client.sendMessage(message);
+                                observer.updateLog(message);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

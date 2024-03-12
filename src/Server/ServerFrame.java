@@ -1,22 +1,39 @@
 package Server;
 
 import javax.swing.*;
+
+import Constructors.Message;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class ServerFrame extends JFrame implements ActionListener {
-    private final Server server;
+public class ServerFrame extends JFrame implements ActionListener, ServerObserver {
+    private Server server;
+    public int serverPort;
+    public int maxClients;
+    public boolean isSleeping = false;
+    public boolean isRunning = false;
 
     // GUI components
-    JTextPane text;
     JPanel buttonPanel;
     JPanel coverText;
+    JPanel loggingArea;
     JPanel coverButton;
+
     JButton connect;
     JButton shutoff;
     JButton sleep;
     JButton reactivate;
+
+    JTextPane StatusLog;
+
+    JTextArea dateArea;
+    JTextArea exchangeArea;
+    JTextArea messageArea;
+    //JTextArea receiverArea;
 
     // Color and texturing
     private String buttonFieldColor = "#01A7C2";
@@ -30,9 +47,11 @@ public class ServerFrame extends JFrame implements ActionListener {
     private int fontsize = 13;
 
     // Constructor for frame
-    public ServerFrame(int port) {
+    public ServerFrame(int port, int maxClients) {
         // Initialize the server
-        server = new Server(port);
+        //server = new Server(port);
+        this.serverPort = port;
+        this.maxClients = maxClients;
 
         // Setup the GUI
         setTitle("Server");
@@ -85,6 +104,40 @@ public class ServerFrame extends JFrame implements ActionListener {
         buttonPanel.add(reactivate);
         buttonPanel.setBackground(Color.decode(buttonFieldColor));
 
+
+        // register things for logging panel
+        loggingArea = new JPanel();
+        loggingArea.setLayout(new BorderLayout());
+        dateArea = new JTextArea();
+        exchangeArea = new JTextArea();
+        messageArea = new JTextArea();
+
+        dateArea.setColumns(12);
+        dateArea.setRows(10);
+        dateArea.setLineWrap(true);
+        dateArea.setEditable(false);
+        dateArea.setBackground(Color.decode(textAreaColor));
+        dateArea.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor)));
+
+        messageArea.setColumns(10);
+        messageArea.setRows(10);
+        messageArea.setLineWrap(true);
+        messageArea.setEditable(false);
+        messageArea.setBackground(Color.decode(textAreaColor));
+        messageArea.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor)));
+
+        exchangeArea.setColumns(12);
+        exchangeArea.setRows(10);
+        exchangeArea.setLineWrap(true);
+        exchangeArea.setEditable(false);
+        exchangeArea.setBackground(Color.decode(textAreaColor));
+        exchangeArea.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor)));
+
+        loggingArea.add(dateArea, BorderLayout.WEST);
+        loggingArea.add(messageArea, BorderLayout.CENTER);
+        loggingArea.add(exchangeArea, BorderLayout.EAST);
+        
+
         // Register action listeners
         connect.addActionListener(this);
         shutoff.addActionListener(this);
@@ -92,8 +145,9 @@ public class ServerFrame extends JFrame implements ActionListener {
         reactivate.addActionListener(this);
 
         // Text pane for server status
-        text = new JTextPane();
-        text.setText("Server status: Ready to connect");
+        StatusLog = new JTextPane();
+        StatusLog.setText("Server status: Ready to connect");
+        StatusLog.setEditable(false);
 
         // Setup covers for text and buttons
         coverButton = new JPanel(new FlowLayout());
@@ -104,10 +158,11 @@ public class ServerFrame extends JFrame implements ActionListener {
         coverText = new JPanel(new FlowLayout());
         coverText.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor), thickness));
         coverText.setBackground(Color.decode(textAreaColor));
-        coverText.add(text);
+        coverText.add(StatusLog);
 
         // Add components to content pane
-        contentPane.add(coverText, BorderLayout.CENTER);
+        contentPane.add(coverText, BorderLayout.NORTH);
+        contentPane.add(loggingArea, BorderLayout.CENTER);
         contentPane.add(coverButton, BorderLayout.SOUTH);
 
         // Make the frame visible
@@ -115,31 +170,101 @@ public class ServerFrame extends JFrame implements ActionListener {
     }
 
     @Override
+    public void updateLog(Message message) {
+
+        SwingUtilities.invokeLater(() -> {
+            String existingDates = dateArea.getText();
+            String existingExchanges = exchangeArea.getText();
+            String existingMessages = messageArea.getText();
+
+            String[] dates = existingDates.split("\n");
+            String[] exchanges = existingExchanges.split("\n");
+            String[] messageArray = existingMessages.split("\n");
+
+            ArrayList<String> messageList = new ArrayList<>(Arrays.asList(messageArray));
+            ArrayList<String> exchangeList = new ArrayList<>(Arrays.asList(exchanges));
+            ArrayList<String> dateList = new ArrayList<>(Arrays.asList(dates));
+
+            messageList.add(message.getMessage().toString());
+            exchangeList.add("From: " + message.getSenderName().toString() + " To: " + message.getReceiverID());
+            dateList.add(message.getTime());
+            
+            // Get only last 10 messages
+            int startMessage = messageList.size() > 10 ? messageList.size() - 10 : 0;
+            messageList = new ArrayList<>(messageList.subList(startMessage, messageList.size()));
+
+            int startDate = dateList.size() > 10 ? dateList.size() - 10 : 0;
+            dateList = new ArrayList<>(dateList.subList(startDate, dateList.size()));
+
+            int startExchange = exchangeList.size() > 10 ? exchangeList.size() - 10 : 0;
+            exchangeList = new ArrayList<>(exchangeList.subList(startExchange, exchangeList.size()));
+
+            String newMessage = String.join("\n", messageList);
+            String newExchanges = String.join("\n", exchangeList);
+            String newDates = String.join("\n", dateList);
+
+            dateArea.setText(newDates);
+            exchangeArea.setText(newExchanges);
+            messageArea.setText(newMessage);
+        });
+    }
+
+    @Override
     public void actionPerformed(ActionEvent action) {
         if (action.getSource() == connect) {
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() throws Exception {
-                    server.establishConnection();
-                    return null;
-                }
+            if(!isRunning){
+                server = new Server(serverPort, maxClients);
+                server.registerObserver(this);
 
-                @Override
-                protected void done() {
-                    connect.setText("Connected");
-                    text.setText("Server status: Connected");
-                }
-            };
-            worker.execute();
+                SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        server.establishConnection();
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        connect.setText("Connected");
+                    }
+                };
+
+                worker.execute();
+                isRunning = true;
+                StatusLog.setText("Server status: Connected");
+
+            } else {
+                StatusLog.setText("Server status: Already connected");
+            }
+            
         } else if (action.getSource() == shutoff) {
-            server.stopServer();
-            text.setText("Server status: Shut Down");
+            if(isRunning){
+                server.stopServer();
+                StatusLog.setText("Server status: Shut Down");
+                isRunning = false;
+            } else {
+                StatusLog.setText("Server status: Already shut down");
+            }
+
         } else if (action.getSource() == sleep) {
-            server.setSleeping(true);
-            text.setText("Server status: Sleeping");
+            if(isSleeping){
+                StatusLog.setText("Server status: Already sleeping");
+
+            } else {
+                server.setSleeping(true);
+                StatusLog.setText("Server status: Sleeping");
+                isSleeping = true;
+            }
+
         } else if (action.getSource() == reactivate) {
-            server.setSleeping(false);
-            text.setText("Server status: Reactivated");
+            if(!isSleeping){
+                StatusLog.setText("Server status: Already reactivated");
+
+            } else {
+                isSleeping = false;
+                server.setSleeping(false);
+                StatusLog.setText("Server status: Reactivated");
+            }
         }
     }
 }

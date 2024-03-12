@@ -11,10 +11,16 @@ import java.util.Arrays;
 
 public class ClientFrame extends JFrame implements ActionListener, ClientObserver {
     // GUI info
-    private JTextPane text;
+    private JTextArea messagePane;
+    private JTextArea time;
+    private JTextArea sender;
+
+    //JTextPane 
+
     private JPanel buttonPanel;
 
     private JPanel coverText;
+    private JPanel loggingArea;
     private JPanel coverButton;
     
     private String usernamePlaceHolder = "Username: ";
@@ -99,8 +105,37 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         buttonPanel.add(clientConnect);
         buttonPanel.setBackground(Color.decode(buttonFieldColor));
 
-        text = new JTextPane();
-        text.setText("Awaiting Data...");
+        // Text areas
+        loggingArea = new JPanel();
+        loggingArea.setLayout(new BorderLayout());
+        messagePane = new JTextArea();
+        time = new JTextArea();
+        sender = new JTextArea();
+
+        time.setColumns(12);
+        time.setRows(10);
+        time.setLineWrap(true);
+        time.setEditable(false);
+        time.setBackground(Color.decode(textAreaColor));
+        time.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor)));
+
+        sender.setColumns(12);
+        sender.setRows(10);
+        sender.setLineWrap(true);
+        sender.setEditable(false);
+        sender.setBackground(Color.decode(textAreaColor));
+        sender.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor)));
+
+        messagePane.setColumns(12);
+        messagePane.setRows(10);
+        messagePane.setLineWrap(true);
+        messagePane.setEditable(false);
+        messagePane.setBackground(Color.decode(textAreaColor));
+        messagePane.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor)));
+
+        loggingArea.add(sender, BorderLayout.WEST);
+        loggingArea.add(time, BorderLayout.EAST);
+        loggingArea.add(messagePane, BorderLayout.CENTER);
 
         // Covers
         coverButton = new JPanel();
@@ -113,10 +148,11 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
         coverText.setBorder(BorderFactory.createLineBorder(Color.decode(borderColor), thickness));
         coverText.setBackground(Color.decode(textAreaColor));
 
-        coverText.add(text);
+        //coverText.add(messagePane);
         coverButton.add(buttonPanel);
 
-        contentPane.add(coverText, BorderLayout.CENTER);
+        //contentPane.add(coverText, BorderLayout.NORTH);
+        contentPane.add(loggingArea, BorderLayout.CENTER);
         contentPane.add(coverButton, BorderLayout.SOUTH);
 
         setVisible(true);
@@ -164,19 +200,41 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
 
     // Observer(this) reads message from client
     @Override
-    public void updateMessage(String message) {
+    public void updateMessage(String messageSent, String senderName, String timeOfArrival) {
         SwingUtilities.invokeLater(() -> {
-            String existingContent = text.getText();
-            String[] messages = existingContent.split("\n");
+            String existingMessage = messagePane.getText();
+            String existingDate = time.getText();
+            String existingSender = sender.getText();
+
+            String[] messages = existingMessage.split("\n");
+            String[] dates = existingDate.split("\n");
+            String[] senders = existingSender.split("\n");
+
             ArrayList<String> messageList = new ArrayList<>(Arrays.asList(messages));
-            messageList.add(message);
+            ArrayList<String> dateList = new ArrayList<>(Arrays.asList(dates));
+            ArrayList<String> senderList = new ArrayList<>(Arrays.asList(senders));
+
+            messageList.add(messageSent);
+            dateList.add(timeOfArrival);
+            senderList.add(senderName);
             
             // Get only last 3 messages
-            int start = messageList.size() > 3 ? messageList.size() - 3 : 0;
-            messageList = new ArrayList<>(messageList.subList(start, messageList.size()));
+            int startMssg = messageList.size() > 3 ? messageList.size() - 3 : 0;
+            messageList = new ArrayList<>(messageList.subList(startMssg, messageList.size()));
 
-            String newContent = String.join("\n", messageList);
-            text.setText(newContent);
+            int startDate = dateList.size() > 3 ? dateList.size() - 3 : 0;
+            dateList = new ArrayList<>(dateList.subList(startDate, dateList.size()));
+
+            int startSender = senderList.size() > 3 ? senderList.size() - 3 : 0;
+            senderList = new ArrayList<>(senderList.subList(startSender, senderList.size()));
+
+            String newDate = String.join("\n", dateList);
+            String newSender = String.join("\n", senderList);
+            String newMessage = String.join("\n", messageList);
+
+            messagePane.setText(newMessage);
+            time.setText(newDate);
+            sender.setText(newSender);
         });
     }
     // Observer(this) receives updated client list
@@ -214,6 +272,8 @@ public class ClientFrame extends JFrame implements ActionListener, ClientObserve
 
         } else if (e.getSource() == sendButton && clientList.getSelectedItem() != null) {
             String message = inputField.getText();
+            //Integer selectedClient = clientList.getSelectedIndex();
+
             client.sendMessage(message, clientList.getItemAt(clientList.getSelectedIndex()));
             inputField.setText("");
         }

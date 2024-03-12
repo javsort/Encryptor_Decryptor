@@ -146,12 +146,12 @@ public class Client {
                 // Create message by reading mssg
             } else if(receivedObject instanceof Message){
                 Message message = (Message) receivedObject;
-                System.out.println("Message has been received from: " + message.getSenderID() + ". " + message.getSenderName() + " forwarding mssg to server & users");
+                System.out.println("Message has been received from: " + message.getSenderID() + "-" + message.getSenderName() + " forwarding mssg to server & users");
 
                 if(message.getMessage() != null) {
-                    String decryptedMessage = message.getSenderName() + ": " + functions.decryptData(message, privateKey);
+                    String decryptedMessage =  message.getSenderName() + ": " + functions.decryptData(message, privateKey);
                     //String decryptedMessage = functions.decryptData(message, privateKey);
-                    observer.updateMessage(decryptedMessage);
+                    observer.updateMessage(decryptedMessage, message.getSenderName(), message.getTime());
 
                     // Add the message to the message history
                     if (messageHistory.size() == 3) {
