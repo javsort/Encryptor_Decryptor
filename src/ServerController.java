@@ -10,7 +10,7 @@ public class ServerController {
             @Override
             public void run() {
                 try {
-                    ServerFrame server = new ServerFrame(5000, 10);
+                    ServerFrame server = new ServerFrame(5000, 50);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

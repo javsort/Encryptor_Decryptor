@@ -42,6 +42,8 @@ public class Client {
     // Observer for JFrame
     private ClientObserver observer;
 
+    public boolean serverIsConnected = false;
+
     // Constructor
     public Client(String addr, int port) {
         // Set the address and port
@@ -80,7 +82,20 @@ public class Client {
     public void connectToServer() throws Exception {
         try {
             // Connect to the server
-            socket = new Socket(address, port);
+            try {
+                System.out.println("Connecting to server...");
+                socket = new Socket(address, port);
+
+                /*in = new ObjectInputStream(socket.getInputStream());
+                Object serverResponse = in.readObject();
+                if(serverResponse.equals("Server is full")){
+                    System.out.println("Server is full");
+                    return;
+                }*/
+
+            } catch (Exception e) {
+                System.out.println("Connection failed: " + e);
+            }
 
             // Perform the simulated TCP three-way handshake
             performHandshakeClient();
@@ -88,6 +103,7 @@ public class Client {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             System.out.println("Connected");
+            setServerStat(true);
 
             // get ID from server/client handler
             this.id = (int) in.readObject();
@@ -165,6 +181,8 @@ public class Client {
             }
 
         } catch (Exception e) {
+            setServerStat(false);
+            System.out.println("Server has disconnected, throwing exception: " + e  + "\n" + "Server is connected: " + serverIsConnected);
             e.printStackTrace();
         }
     }
@@ -193,7 +211,7 @@ public class Client {
         new Thread(new Runnable(){
             @Override
             public void run(){
-                while (true){
+                while (serverIsConnected){
                     receiveMessages();
 
                     try {
@@ -270,6 +288,10 @@ public class Client {
             e.printStackTrace();
             System.out.println("Failed to send message");
         }
+    }
+
+    public void setServerStat(boolean isConnected){
+        serverIsConnected = isConnected;
     }
 
     // Set username

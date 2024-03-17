@@ -28,11 +28,15 @@ public class Server {
 
     private ServerObserver observer;
 
+    private int maxClientSize;
+    private int activeClients = 0;
+
     public Server(int port, int clientSize) {
         this.port = port;
         try {
             serverSocket = new ServerSocket(this.port);
             executorService = Executors.newFixedThreadPool(clientSize);
+            this.maxClientSize = clientSize;
             isRunning = true;
             System.out.println("Server started with port: " + this.port + " and max clients: " + clientSize + "\n");
 
@@ -48,26 +52,34 @@ public class Server {
     public void establishConnection() {
         while (isRunning) {
             try {
-                Socket socket = serverSocket.accept();
+                if(activeClients != maxClientSize && activeClients <= maxClientSize && !isSleeping) {
+                    activeClients++;
+                    Socket socket = serverSocket.accept();
 
-                // Perform the 3-way handshake
-                performThreeWayHandshake(socket);
-
-                if (socket != null) {
-                    System.out.println("Client accepted" + socket.getInetAddress() + ":" + socket.getPort());
-                    ClientHandler clientHandler = new ClientHandler(generateID(), socket, this);
-                    clients.add(clientHandler);
-                    executorService.execute(clientHandler);
-                    publicKeys.put(clientHandler.getId(), clientHandler.getPublicKey());
-                    newClient = true;
+                    // Perform the 3-way handshake
+                    performThreeWayHandshake(socket);
+                    if (socket != null) {
+                        System.out.println("Client accepted" + socket.getInetAddress() + ":" + socket.getPort());
+                        ClientHandler clientHandler = new ClientHandler(generateID(), socket, this);
+                        clients.add(clientHandler);
+                        executorService.execute(clientHandler);
+                        publicKeys.put(clientHandler.getId(), clientHandler.getPublicKey());
+                        newClient = true;
+                    }
+                    if (!clients.isEmpty() && (newClient || clientDisconnected)) {
+                        newClient = false;
+                        clientDisconnected = false;
+                        updateClientLists();
+                    }
+                    Thread.sleep(500);
                 }
-
-                if (!clients.isEmpty() && (newClient || clientDisconnected)) {
-                    newClient = false;
-                    clientDisconnected = false;
-                    updateClientLists();
-                }
-                Thread.sleep(500);
+                /*} else {
+                    Socket socket = serverSocket.accept();
+                    ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                    oos.writeObject("Server is full");
+                    oos.flush();
+                    System.out.println("Server is full");
+                }*/
                 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -123,9 +135,27 @@ public class Server {
         clientDisconnected = true;
     }
 
-    public void stopServer() {
+    public synchronized void stopServer() {
         isRunning = false;
+
+        for(ClientHandler client : clients) {
+            try {
+                client.getSocket().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         executorService.shutdown();
+
+        try {
+            if(serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         System.out.println("Server stopped");
     }
 

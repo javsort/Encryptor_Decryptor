@@ -107,6 +107,10 @@ public class ClientHandler implements Runnable {
         out.writeObject(message);
     }
 
+    public Socket getSocket(){
+        return this.clientSocket;
+    }
+
     // Getters
     public PublicKey getPublicKey(){
         return this.publicKey;
